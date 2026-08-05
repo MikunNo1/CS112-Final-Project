@@ -30,3 +30,20 @@ print("\n========== LINES ==========")
 print(lines.describe(include='all'))
 
 region_counts = substations["Region"].value_counts()
+print(region_counts)
+
+plt.figure(figsize=(10.6))
+
+region_counts.plot(
+    kind='bar',
+    color='pink'
+)
+
+plt.title(
+
+
+
+
+
+
+
