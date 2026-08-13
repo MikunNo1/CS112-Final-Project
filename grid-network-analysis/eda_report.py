@@ -48,4 +48,13 @@ plt.tight_layout()
 plt.show()
 
 voltage_counts = substations["Voltage (kV)"].value_counts().sort_index()
+print(voltage_counts)
 
+plt.figure(figsize=(8,5))
+
+voltage_counts.plot(
+    kind="bar",
+    color="blue"
+)
+
+plt.title("Distribution")
