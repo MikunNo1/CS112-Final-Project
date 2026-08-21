@@ -2,15 +2,16 @@
 import pandas as pd
 import numpy as np
  
-utilities = pd.read_csv('utilities.csv')
-substations = pd.read_csv('substations.csv')
-lines = pd.read_csv('lines.csv')
+utilities = pd.read_csv('data_sets/utilities.csv')
+substations = pd.read_csv('data_sets/substations.csv')
+lines = pd.read_csv('data_sets/lines.csv')
 
 #print(substations.info())
 # Step 2: Handle missing values
 # Even though the generator produces clean data, treat this step seriously —
 # Decide on imputation strategies for different columns and document your decisions and rationale.
 if substations.isnull().sum().sum() == 0:
+    print("No missing values")
     pass
 else:
     print("Values missing, imputation beginning")
@@ -52,5 +53,43 @@ else:
 
 
 # Check for duplicate entries
-# Validate that latitude/longitude fall within plausible West African bounds
+
+if utilities.duplicated().sum() == 0:
+    print("No duplicates in utilities.csv")
+else:
+    print("deleting duplicates...")
+    utilities.drop_duplicates(inplace=True)
+    print("duplicates deleted")
+
+if lines.duplicated().sum() == 0:
+    print("No duplicates in lines.csv")
+else:
+    print("deleting duplicates...")
+    lines.drop_duplicates(inplace=True)
+    print("duplicates deleted")
+
+if substations.duplicated().sum() == 0:
+    print("No duplicates in substations.csv")
+else:
+    print("deleting duplicates...")
+    substations.drop_duplicates(inplace=True)
+    print("duplicates deleted")
+
+#Duplicate entries were identified as rows where all column values were identical
+
+
+# Validate that latitude/longitude fall within plausible West African bounds#
+
+if substations["Latitude"].between(4,28).all() == True:
+    print("All Latitude values within reasonable West African bounds")
+else: pass
+if substations["Longitude"].between(-16, 15).all() == True:
+    print("All Longitude values within reasonable West African bounds")
+else: pass
+
+
 # Ensure data type consistency (numeric columns are truly numeric)
+print(
+substations.dtypes,
+lines.dtypes,
+utilities.dtypes)
