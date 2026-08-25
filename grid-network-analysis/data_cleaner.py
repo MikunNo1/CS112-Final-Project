@@ -6,6 +6,7 @@ utilities = pd.read_csv('data_sets/utilities.csv')
 substations = pd.read_csv('data_sets/substations.csv')
 lines = pd.read_csv('data_sets/lines.csv')
 
+print(substations.columns)
 #print(substations.info())
 # Step 2: Handle missing values
 # Even though the generator produces clean data, treat this step seriously —

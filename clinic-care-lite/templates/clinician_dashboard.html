@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clinician Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="dark-theme">
+    <h1>Welcome, Dr. {{ name }}</h1>
+    <h2>Assign Health Task</h2>
+    <form method="POST" action="/create_task">
+        <input type="text" name="title" placeholder="Task Title" required>
+        <textarea name="description" placeholder="Instructions for the patient" required></textarea>
+        <input type="date" name="due_date" required>
+        <button type="submit">Assign</button>
+    </form>
+    <h2>Submissions Awaiting Review</h2>
+    <!-- Display submissions with review-outcome form -->
+</body>
+</html>
