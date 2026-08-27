@@ -1,1 +1,16 @@
-{}
+{
+    "30010000": {
+        "name": "Yam Abu",
+        "email": "yam.abu@test.demo",
+        "password": "$2b$12$yeRXMOlq1O8KCaESZWShmOk1CPk1gN.I0BYU3ULXGRHiEhwZbt.3m",
+        "role": "clinician",
+        "theme": "dark"
+    },
+    "30012026": {
+        "name": "Tain Plan",
+        "email": "tain.plan@test.demo",
+        "password": "$2b$12$aGA6KnsCNeIx8hSf0IUcS.MrfghA3MTW2fVDbMHWADmtYAVQJ/A9O",
+        "role": "patient",
+        "theme": "colorful"
+    }
+}
