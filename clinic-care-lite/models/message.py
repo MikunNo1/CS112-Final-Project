@@ -4,12 +4,6 @@ from datetime import datetime
 
 
 class Message:
-    """
-    Represents a message between a patient and a clinician.
-
-    Messages are stored in data/messages.json.
-    """
-
     FILE_PATH = "data/messages.json"
 
     def __init__(
@@ -28,12 +22,8 @@ class Message:
         self.read = False
         self.is_announcement = is_announcement
 
-    def validate(self):
-        """
-        Validate the message before saving it.
-        """
-
-        if not self.sender_id:
+    def validate(self):    
+       if not self.sender_id:
             raise ValueError("Sender ID is required.")
 
         if not self.recipient_id:
@@ -45,10 +35,7 @@ class Message:
         return True
 
     def save(self):
-        """
-        Save the message to messages.json.
-        """
-
+        
         self.validate()
 
         # Create data directory if it does not exist
@@ -79,10 +66,6 @@ class Message:
 
     @classmethod
     def load(cls, message_id):
-        """
-        Load one message from messages.json.
-        """
-
         with open(cls.FILE_PATH, "r") as f:
             data = json.load(f)
 
@@ -108,11 +91,6 @@ class Message:
 
     @classmethod
     def get_conversation(cls, user1_id, user2_id):
-        """
-        Return all messages exchanged between two users.
-
-        The order of the users does not matter.
-        """
 
         with open(cls.FILE_PATH, "r") as f:
             data = json.load(f)
@@ -154,10 +132,6 @@ class Message:
 
     @classmethod
     def get_inbox(cls, user_id):
-        """
-        Return messages received by a user.
-        """
-
         with open(cls.FILE_PATH, "r") as f:
             data = json.load(f)
 
@@ -268,12 +242,6 @@ class Message:
 
     @classmethod
     def search_by_date(cls, date):
-        """
-        Find messages sent on a specific date.
-
-        date should be in YYYY-MM-DD format.
-        """
-
         with open(cls.FILE_PATH, "r") as f:
             data = json.load(f)
 
@@ -308,10 +276,6 @@ class Message:
         return results
 
     def __repr__(self):
-        """
-        Developer-friendly representation of a Message object.
-        """
-
         return (
             f"Message("
             f"id={self.message_id}, "
