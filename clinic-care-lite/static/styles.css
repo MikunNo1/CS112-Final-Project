@@ -1,0 +1,40 @@
+.dark-theme {
+    background-color: #1c1a1d;
+    color: #e8e0e3;
+    min-height: 100vh;
+}
+
+.dark-theme .card {
+    background-color: #262327;
+    color: #e8e0e3;
+    border: 2px solid #6e4f5a;
+}
+
+.dark-theme .form-control,
+.dark-theme .form-select {
+    background-color: #201d21;
+    color: #e8e0e3;
+    border: 1px solid #3a353b;
+}
+
+.dark-theme .form-control::placeholder {
+    color: #9a9298;
+}
+
+.dark-theme .btn-primary {
+    background-color: #f48fb1;
+    border-color: #f48fb1;
+    color: #1c1a1d;
+}
+
+.dark-theme .btn-primary:hover {
+    background-color: #f06292;
+    border-color: #f06292;
+    color: #1c1a1d;
+}
+
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3 {
+    color: #f8f0f3;
+}

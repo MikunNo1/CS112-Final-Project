@@ -2,42 +2,53 @@
 <html>
 <head>
     <title>Clinician Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dark-theme">
-    <h1>Welcome, Dr. {{ name }}</h1>
-    <h2>Assign Health Task</h2>
-    <form method="POST" action="/create_task">
-        <input type="text" name="title" placeholder="Task Title" required>
-        <textarea name="description" placeholder="Instructions for the patient" required></textarea>
-        <input type="date" name="due_date" required>
-        <input type="text" name="patient_id" placeholder="Insert Patient ID" required>
-        
-        <button type="submit">Assign</button>
-        
-    </form>
-    <h2>Submissions Awaiting Review</h2>
-    <h2>Submissions Awaiting Review</h2>
-{% for sub_id, sub in submissions.items() %}
-<div>
-    <p>Patient: {{ sub.patient_id }} | Task: {{ sub.task_id }}</p>
-    <p>Submitted: {{ sub.timestamp }}</p>
-    <p>File: {{ sub.file_path }}</p>
-    <p>Current status: {{ sub.review_status }}</p>
+    <div class="container py-5" style="max-width: 400px;"></div>
+            <h1>Welcome, Dr. {{ name }}</h1>
+            <h2>Assign Health Task</h2>
 
-    <form method="POST" action="/review_submission">
-        <input type="hidden" name="sub_id" value="{{ sub_id }}">
-        <select name="review_status" required>
-            <option value="Pending">Pending</option>
-            <option value="Reviewed - Normal">Reviewed - Normal</option>
-            <option value="Needs Follow-up">Needs Follow-up</option>
-            <option value="Escalated">Escalated</option>
-        </select>
-        <textarea name="notes" placeholder="Review notes"></textarea>
-        <button type="submit">Save Review</button>
-    </form>
-</div>
-{% endfor %}
-    <!-- Display submissions with review-outcome form -->
+            {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="text-danger">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+            <form method="POST" action="/create_task">
+                <input type="text" name="title" placeholder="Task Title" class="form-control mb-3" required>
+                <textarea name="description" placeholder="Instructions for the patient" class="form-control mb-3" required></textarea>
+                <input type="date" name="due_date" class="form-control mb-3" required>
+                <input type="text" name="patient_id" placeholder="Insert Patient ID" class="form-control mb-3" required>
+                
+                <button type="submit" class="btn btn-primary">Assign</button>
+                
+            </form>
+
+        <!-- Display submissions with review-outcome form -->
+            <h2>Submissions Awaiting Review</h2>
+        {% for sub_id, sub in submissions.items() %}
+        <div class="card p-3 mb-3">
+            <p>Patient: {{ sub.patient_id }} | Task: {{ sub.task_id }}</p>
+            <p>Submitted: {{ sub.timestamp }}</p>
+            <p>File: {{ sub.file_path }}</p>
+            <p>Current status: {{ sub.review_status }}</p>
+
+            <form method="POST" action="/review_submission">
+                <input type="hidden" name="sub_id" value="{{ sub_id }}">
+                <select name="review_status" required>
+                    <option value="Pending">Pending</option>
+                    <option value="Reviewed - Normal">Reviewed - Normal</option>
+                    <option value="Needs Follow-up">Needs Follow-up</option>
+                    <option value="Escalated">Escalated</option>
+                </select>
+                <textarea name="notes" placeholder="Review notes" class="form-control mb-3"></textarea>
+                <button type="submit" class="btn btn-primary">Save Review</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
 </body>
 </html>

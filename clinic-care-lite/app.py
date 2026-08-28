@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import json
 import bcrypt
 import os
@@ -61,7 +61,9 @@ def dashboard():
     with open('data/task_submissions.json', 'r') as f:
         all_subs = json.load(f)
     my_subs = {sid: s for sid, s in all_subs.items() if s['patient_id'] == session['user_id']}
-    return render_template('patient_dashboard.html', name=session['name'], tasks=my_tasks, submissions=my_subs)
+    submitted_ids = [s['task_id'] for s in my_subs.values()]
+    return render_template('patient_dashboard.html', name=session['name'], tasks=my_tasks, submissions=my_subs, submitted_ids=submitted_ids)
+    
 
 # Additional routes for health-task creation, submission, review, messaging, etc.
 
@@ -76,6 +78,7 @@ def create_task():
     with open('data/users.json', 'r') as f:
         users = json.load(f)
     if patient_id not in users or users[patient_id]['role'] != 'patient':
+        flash('No patient found with that ID.')
         return redirect(url_for('dashboard'))
     clinic_id = session['user_id']
     with open('data/health_tasks.json', 'r') as f:
@@ -97,11 +100,15 @@ def submit_task():
     temp_path = uploaded_file.filename
     uploaded_file.save(temp_path)
 
-    submission = TaskSubmission(patient_id, task_id, temp_path)
+    with open('data/health_tasks.json', 'r') as f:
+        tasks = json.load(f)
+    clinic_id = tasks[task_id]['clinic_id']
+    submission = TaskSubmission(patient_id, task_id, temp_path, clinic_id)
     try:
         submission.save_file()
         submission.save()
     except ValueError:
+        flash('Only .txt, .csv, and .pdf files are allowed.')
         os.remove(temp_path)
         return redirect(url_for('dashboard'))
 
