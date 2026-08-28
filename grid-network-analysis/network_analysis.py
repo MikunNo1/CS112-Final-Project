@@ -66,3 +66,4 @@ plt.title('National Grid Substation Network')
 plt.tight_layout()
 plt.savefig('network_graph.png')
 plt.show()
+
