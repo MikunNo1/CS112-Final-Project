@@ -7,44 +7,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dark-theme">
-    <div class="container py-5" style="max-width: 400px;"></div>
-        <h1>Welcome, {{ name }}</h1>
-        <div class="alert alert-info">You have {{ pending_tasks }} task(s) awaiting submission.</div>
-        {% if reviewed_count %}<div class="alert alert-success">{{ reviewed_count }} submission(s) reviewed — see status below.</div>{% endif %}
-        {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <p class="text-danger">{{ message }}</p>
-        {% endfor %}
-    {% endwith %}
+    <div class="container py-5" style="max-width: 400px;">
+            <h1>Welcome, {{ name }}</h1>
+            <div class="alert alert-info">You have {{ pending_tasks }} task(s) awaiting submission.</div>
+            {% if reviewed_count %}<div class="alert alert-success">{{ reviewed_count }} submission(s) reviewed — see status below.</div>{% endif %}
+            {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="text-danger">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
 
-        <h2>Submit Pending Health Tasks</h2>
-        {% for task_id, task in tasks.items() %}
+            <h2>Submit Pending Health Tasks</h2>
+            {% for task_id, task in tasks.items() %}
+            <div class="card p-3 mb-3">
+                <h3>{{ task.title }}</h3>
+                <p>{{ task.description }}</p>
+                <p>Due: {{ task.due_date }}</p>
+
+                {% if task_id in submitted_ids %}
+                <p><em>Submitted — see status below</em></p>
+            {% else %}
+                <form method="POST" action="/submit_task" enctype="multipart/form-data">
+                    <input type="hidden" name="task_id" value="{{ task_id }}">
+                    <input type="file" name="submission_file" class="form-control mb-3"  required>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            {% endif %}
+            </div>
+            {% endfor %}
+         
+            
+            <h2>Submissions Status</h2>
+            <!-- Display status of all submissions for the current patient -->
+            {% for sub_id, sub in submissions.items() %}
         <div class="card p-3 mb-3">
-            <h3>{{ task.title }}</h3>
-            <p>{{ task.description }}</p>
-            <p>Due: {{ task.due_date }}</p>
-
-            {% if task_id in submitted_ids %}
-            <p><em>Submitted — see status below</em></p>
-        {% else %}
-            <form method="POST" action="/submit_task" enctype="multipart/form-data">
-                <input type="hidden" name="task_id" value="{{ task_id }}">
-                <input type="file" name="submission_file" class="form-control mb-3"  required>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        {% endif %}
+            <p>Task: {{ tasks[sub.task_id].title }}</p>
+            <p>Status: {{ sub.review_status }}</p>
+            <p>Doctor's Notes: {{ sub.notes }}</p>
         </div>
         {% endfor %}
-    </div>  
-        
-        <h2>Submissions Status</h2>
-        <!-- Display status of all submissions for the current patient -->
-        {% for sub_id, sub in submissions.items() %}
-    <div class="card p-3 mb-3">
-        <p>Task: {{ tasks[sub.task_id].title }}</p>
-        <p>Status: {{ sub.review_status }}</p>
-        <p>Doctor's Notes: {{ sub.notes }}</p>
-    </div>
-    {% endfor %}
+    </div>     
 </body>
 </html>

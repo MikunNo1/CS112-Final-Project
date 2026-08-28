@@ -19,5 +19,12 @@
         "password": "$2b$12$JAD05EQnUS7tmNo5RvdScuRx90EVag8R3t9THM1LxCDFUYLj/TGRS",
         "role": "patient",
         "theme": "colorful"
+    },
+    "30020000": {
+        "name": "Anna Belle",
+        "email": "anna.belle@demo.test",
+        "password": "$2b$12$.E.E7V0H85XQuLcU8GVLhuF2uykMLIkVFD.TSTHFvYv5dr4N2x16u",
+        "role": "clinician",
+        "theme": "dark"
     }
 }

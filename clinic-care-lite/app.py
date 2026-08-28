@@ -51,7 +51,14 @@ def dashboard():
     role = session['role']
     if role == 'clinician':
         with open('data/task_submissions.json', 'r') as f:
-            submissions = json.load(f)
+            all_subs = json.load(f)
+        with open('data/health_tasks.json', 'r') as f:
+            all_tasks = json.load(f)
+        submissions = {
+            sid: s for sid, s in all_subs.items()
+            if s['task_id'] in all_tasks
+            and all_tasks[s['task_id']]['clinic_id'] == session['user_id']
+        }
         pending_count = sum(1 for s in submissions.values() if s['review_status'] == 'Pending')
         statuses = ['Pending', 'Reviewed - Normal', 'Needs Follow-up', 'Escalated']
         counts = [sum(1 for s in submissions.values() if s['review_status'] == st) for st in statuses]
