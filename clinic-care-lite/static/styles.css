@@ -38,3 +38,23 @@
 .dark-theme h3 {
     color: #f8f0f3;
 }
+
+.container {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+body {
+    padding: 20px 0;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+h1, h2, h3 {
+    margin-top: 20px;
+    margin-bottom: 12px;
+}

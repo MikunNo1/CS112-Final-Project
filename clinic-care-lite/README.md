@@ -11,6 +11,7 @@ ClinicCare Lite is a Clinic management system that enables physicians to assign 
 - **Patient** — ID `30012026`, password `Test@1234` (Tain Plan)
 
 You may also register new accounts. 
+Using the URL : http://127.0.0.1:5000/register
 ID rules: clinician IDs are 8 digits ending
 in `0000`; patient IDs are 8 digits ending in a year between 2022 and 2028.
 Passwords require at least 8 characters with an uppercase letter, a lowercase

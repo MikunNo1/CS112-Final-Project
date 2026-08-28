@@ -7,49 +7,54 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dark-theme">
-    <div class="container py-5" style="max-width: 400px;"></div>
-            <h1>Welcome, Dr. {{ name }}</h1>
-            <div class="alert alert-info">You have {{ pending_count }} submission(s) awaiting review.</div>
-            <h2>Assign Health Task</h2>
+    <div class="container py-5" style="max-width: 400px;">
+                <h1>Welcome, Dr. {{ name }}</h1>
+                <div class="alert alert-info">You have {{ pending_count }} submission(s) awaiting review.</div>
+                <h2>Assign Health Task</h2>
 
-            {% with messages = get_flashed_messages() %}
-            {% for message in messages %}
-                <p class="text-danger">{{ message }}</p>
+                {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                    <p class="text-danger">{{ message }}</p>
+                {% endfor %}
+            {% endwith %}
+
+                <form method="POST" action="/create_task">
+                    <input type="text" name="title" placeholder="Task Title" class="form-control mb-3" required>
+                    <textarea name="description" placeholder="Instructions for the patient" class="form-control mb-3" required></textarea>
+                    <input type="date" name="due_date" class="form-control mb-3" required>
+                    <input type="text" name="patient_id" placeholder="Insert Patient ID" class="form-control mb-3" required>
+                    
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                    
+                </form>
+
+            <!-- Display submissions with review-outcome form -->
+                <h2>Submissions Review Status</h2>
+            {% for sub_id, sub in submissions.items() %}
+            <div class="card p-3 mb-3">
+                    <p>Patient: {{ sub.patient_id }} | Task: {{ sub.task_id }}</p>
+                    <p>Submitted: {{ sub.timestamp }}</p>
+                    <p>File: {{ sub.file_path }}</p>
+                    <p>Current status: {{ sub.review_status }}</p>
+                <div class="card p-3 mb-3">   
+                    <h5>Review Status</h5>
+                    <form method="POST" action="/review_submission">
+                        <input type="hidden" name="sub_id" value="{{ sub_id }}">
+                        <select name="review_status" required>
+                            
+                            <option value="Reviewed - Normal">Reviewed - Normal</option>
+                            <option value="Needs Follow-up">Needs Follow-up</option>
+                            <option value="Escalated">Escalated</option>
+                        </select>
+                        <textarea name="notes" placeholder="Review notes" class="form-control mb-3"></textarea>
+                        <button type="submit" class="btn btn-primary">Save Review</button>
+                    </form>
+                </div>    
+            </div>
             {% endfor %}
-        {% endwith %}
 
-            <form method="POST" action="/create_task">
-                <input type="text" name="title" placeholder="Task Title" class="form-control mb-3" required>
-                <textarea name="description" placeholder="Instructions for the patient" class="form-control mb-3" required></textarea>
-                <input type="date" name="due_date" class="form-control mb-3" required>
-                <input type="text" name="patient_id" placeholder="Insert Patient ID" class="form-control mb-3" required>
-                
-                <button type="submit" class="btn btn-primary">Assign</button>
-                
-            </form>
-
-        <!-- Display submissions with review-outcome form -->
-            <h2>Submissions Awaiting Review</h2>
-        {% for sub_id, sub in submissions.items() %}
-        <div class="card p-3 mb-3">
-            <p>Patient: {{ sub.patient_id }} | Task: {{ sub.task_id }}</p>
-            <p>Submitted: {{ sub.timestamp }}</p>
-            <p>File: {{ sub.file_path }}</p>
-            <p>Current status: {{ sub.review_status }}</p>
-
-            <form method="POST" action="/review_submission">
-                <input type="hidden" name="sub_id" value="{{ sub_id }}">
-                <select name="review_status" required>
-                    <option value="Pending">Pending</option>
-                    <option value="Reviewed - Normal">Reviewed - Normal</option>
-                    <option value="Needs Follow-up">Needs Follow-up</option>
-                    <option value="Escalated">Escalated</option>
-                </select>
-                <textarea name="notes" placeholder="Review notes" class="form-control mb-3"></textarea>
-                <button type="submit" class="btn btn-primary">Save Review</button>
-            </form>
-        </div>
-        {% endfor %}
+            <h2>Submissions Analytics</h2>
+    <img src="{{ url_for('static', filename='analytics.png') }}" alt="Submissions by status" style="max-width: 500px;">
     </div>
 </body>
 </html>
