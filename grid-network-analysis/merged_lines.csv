@@ -1,3 +1,42 @@
+<<<<<<< HEAD
+# Merge lines with substations to get source substation details
+lines_with_source = lines.merge(
+    substations[['Substation ID', 'Name', 'Region', 'Country']],
+    left_on='Source Substation ID', right_on='Substation ID',
+    how='left', suffixes=('', '_source'))
+ 
+# Merge with destination substation details
+lines_with_subs = lines_with_source.merge(
+    substations[['Substation ID', 'Name', 'Region', 'Country']],
+    left_on='Destination Substation ID', right_on='Substation ID',
+    how='left', suffixes=('_source', '_dest'))
+ 
+# Bring in the utility name/code too
+lines_with_utility = lines_with_subs.merge(
+    utilities[['Utility ID', 'Name', 'Code']], on='Utility ID', how='left')
+ 
+# Preview merged data
+print("Merged Lines DataFrame:")
+print(lines_with_utility[['Code', 'Source Substation', 'Region_source',
+                           'Destination Substation', 'Region_dest']].head(), "\n")
+ 
+# Analyse lines by utility and source region
+lines_by_utility_region = (lines_with_utility
+    .groupby(['Code', 'Region_source'])
+    .size().reset_index(name='Line Count'))
+top_lines = lines_by_utility_region.sort_values(by='Line Count', ascending=False).head(10)
+print("Top 10 Utility/Region Combinations by Line Count:")
+print(top_lines, "\n")
+ 
+# Visualize top combinations
+plt.figure(figsize=(12, 6))
+top_lines.plot(kind='bar', x='Code', y='Line Count',
+               title='Top 10 Utility/Region Combinations by Line Count')
+plt.xlabel('Utility')
+plt.ylabel('Number of Lines')
+plt.tight_layout()
+plt.show()
+=======
 ,Line ID,Utility ID,Source Substation ID,Source Substation,Destination Substation ID,Destination Substation,Voltage (kV),Length (km),Capacity (MVA),Status,Line Type,Substation ID_source,Name_source,Region_source,Country_source,Substation ID_dest,Name_dest,Region_dest,Country_dest,Name,Code
 0,1,2,1,Achimota Substation,2,Tema Substation,11,25.2,215.0,Active,Underground,1,Achimota Substation,Greater Accra,Ghana,2,Tema Substation,Greater Accra,Ghana,Northern Electricity Distribution Company,NED
 1,2,2,1,Achimota Substation,3,Mallam Substation,11,11.0,36.4,Active,Overhead,1,Achimota Substation,Greater Accra,Ghana,3,Mallam Substation,Greater Accra,Ghana,Northern Electricity Distribution Company,NED
@@ -54,3 +93,4 @@
 52,53,6,39,Aflao Border Station,2,Tema Substation,330,157.9,207.8,Active,Overhead,39,Aflao Border Station,Togo border,Togo,2,Tema Substation,Greater Accra,Ghana,Communaute Electrique du Benin,CEB
 53,54,6,39,Aflao Border Station,40,Lome Transmission Hub,330,3.8,323.5,Active,Overhead,39,Aflao Border Station,Togo border,Togo,40,Lome Transmission Hub,Togo,Togo,Communaute Electrique du Benin,CEB
 54,55,6,40,Lome Transmission Hub,41,Cotonou Transmission Hub,330,150.0,326.6,Active,Overhead,40,Lome Transmission Hub,Togo,Togo,41,Cotonou Transmission Hub,Benin,Benin,Communaute Electrique du Benin,CEB
+
