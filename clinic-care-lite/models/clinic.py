@@ -3,7 +3,9 @@ import os
 
 
 class Clinic:
+    FILE_PATH = "data/clinics.json"
     def __init__(self, clinic_id, name, clinician_id):
+        
         self.clinic_id = str(clinic_id)
         self.name = name
         self.clinician_id = str(clinician_id)

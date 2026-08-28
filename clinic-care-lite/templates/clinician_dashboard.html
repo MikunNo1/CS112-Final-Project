@@ -9,6 +9,7 @@
 <body class="dark-theme">
     <div class="container py-5" style="max-width: 400px;"></div>
             <h1>Welcome, Dr. {{ name }}</h1>
+            <div class="alert alert-info">You have {{ pending_count }} submission(s) awaiting review.</div>
             <h2>Assign Health Task</h2>
 
             {% with messages = get_flashed_messages() %}

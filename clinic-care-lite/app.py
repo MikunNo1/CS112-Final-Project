@@ -52,7 +52,20 @@ def dashboard():
     if role == 'clinician':
         with open('data/task_submissions.json', 'r') as f:
             submissions = json.load(f)
-        return render_template('clinician_dashboard.html', name=session['name'], submissions=submissions)
+        pending_count = sum(1 for s in submissions.values() if s['review_status'] == 'Pending')
+        statuses = ['Pending', 'Reviewed - Normal', 'Needs Follow-up', 'Escalated']
+        counts = [sum(1 for s in submissions.values() if s['review_status'] == st) for st in statuses]
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(6, 4))
+        plt.bar(statuses, counts, color=['#f48fb1', '#81c784', '#ffb74d', '#e57373'])
+        plt.title('Submissions by Review Status')
+        plt.ylabel('Count')
+        plt.tight_layout()
+        plt.savefig('static/analytics.png')
+        plt.close()
+        return render_template('clinician_dashboard.html', name=session['name'], submissions=submissions, pending_count=pending_count)
         
 #Patient Dashboard Section        
     with open('data/health_tasks.json', 'r') as f:
@@ -62,7 +75,9 @@ def dashboard():
         all_subs = json.load(f)
     my_subs = {sid: s for sid, s in all_subs.items() if s['patient_id'] == session['user_id']}
     submitted_ids = [s['task_id'] for s in my_subs.values()]
-    return render_template('patient_dashboard.html', name=session['name'], tasks=my_tasks, submissions=my_subs, submitted_ids=submitted_ids)
+    pending_tasks = sum(1 for tid in my_tasks if tid not in submitted_ids)
+    reviewed_count = sum(1 for s in my_subs.values() if s['review_status'] != 'Pending')
+    return render_template('patient_dashboard.html', name=session['name'], tasks=my_tasks, submissions=my_subs, submitted_ids=submitted_ids, pending_tasks=pending_tasks, reviewed_count=reviewed_count)
     
 
 # Additional routes for health-task creation, submission, review, messaging, etc.

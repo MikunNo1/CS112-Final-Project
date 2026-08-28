@@ -9,6 +9,8 @@
 <body class="dark-theme">
     <div class="container py-5" style="max-width: 400px;"></div>
         <h1>Welcome, {{ name }}</h1>
+        <div class="alert alert-info">You have {{ pending_tasks }} task(s) awaiting submission.</div>
+        {% if reviewed_count %}<div class="alert alert-success">{{ reviewed_count }} submission(s) reviewed — see status below.</div>{% endif %}
         {% with messages = get_flashed_messages() %}
         {% for message in messages %}
             <p class="text-danger">{{ message }}</p>
