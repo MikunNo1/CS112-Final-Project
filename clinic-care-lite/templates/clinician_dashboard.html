@@ -17,6 +17,27 @@
         
     </form>
     <h2>Submissions Awaiting Review</h2>
+    <h2>Submissions Awaiting Review</h2>
+{% for sub_id, sub in submissions.items() %}
+<div>
+    <p>Patient: {{ sub.patient_id }} | Task: {{ sub.task_id }}</p>
+    <p>Submitted: {{ sub.timestamp }}</p>
+    <p>File: {{ sub.file_path }}</p>
+    <p>Current status: {{ sub.review_status }}</p>
+
+    <form method="POST" action="/review_submission">
+        <input type="hidden" name="sub_id" value="{{ sub_id }}">
+        <select name="review_status" required>
+            <option value="Pending">Pending</option>
+            <option value="Reviewed - Normal">Reviewed - Normal</option>
+            <option value="Needs Follow-up">Needs Follow-up</option>
+            <option value="Escalated">Escalated</option>
+        </select>
+        <textarea name="notes" placeholder="Review notes"></textarea>
+        <button type="submit">Save Review</button>
+    </form>
+</div>
+{% endfor %}
     <!-- Display submissions with review-outcome form -->
 </body>
 </html>

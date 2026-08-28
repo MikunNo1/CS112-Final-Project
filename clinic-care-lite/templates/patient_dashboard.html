@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="dark-theme">
+    <h1>Welcome, {{ name }}</h1>
+    <h2>Submit Pending Health Tasks</h2>
+    {% for task_id, task in tasks.items() %}
+    <div>
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description }}</p>
+        <p>Due: {{ task.due_date }}</p>
+
+        <form method="POST" action="/submit_task" enctype="multipart/form-data">
+            <input type="hidden" name="task_id" value="{{ task_id }}">
+            <input type="file" name="submission_file" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    {% endfor %}
+    
+    
+    <h2>Submissions Status</h2>
+    <!-- Display status of all submissions for the current patient -->
+    {% for sub_id, sub in submissions.items() %}
+<div>
+    <p>Task: {{ tasks[sub.task_id].title }}</p>
+    <p>Status: {{ sub.review_status }}</p>
+    <p>Doctor's Notes: {{ sub.notes }}</p>
+</div>
+{% endfor %}
+</body>
+</html>

@@ -23,7 +23,7 @@ class Message:
         self.is_announcement = is_announcement
 
     def validate(self):    
-       if not self.sender_id:
+        if not self.sender_id:
             raise ValueError("Sender ID is required.")
 
         if not self.recipient_id:

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import json
 import bcrypt
+import os
 from models.user import User
 from models.health_task import HealthTask
 from models.task_submission import TaskSubmission
@@ -44,12 +45,25 @@ def register():
  
 @app.route('/dashboard')
 def dashboard():
+    #Clinician Dashboard Section
     if 'user_id' not in session:
         return redirect(url_for('index'))
     role = session['role']
     if role == 'clinician':
-        return render_template('clinician_dashboard.html', name=session['name'])
-    return render_template('patient_dashboard.html', name=session['name'])
+        with open('data/task_submissions.json', 'r') as f:
+            submissions = json.load(f)
+        return render_template('clinician_dashboard.html', name=session['name'], submissions=submissions)
+        
+#Patient Dashboard Section        
+    with open('data/health_tasks.json', 'r') as f:
+        all_tasks = json.load(f)
+    my_tasks = {tid: t for tid, t in all_tasks.items() if t['patient_id'] == session['user_id']}
+    with open('data/task_submissions.json', 'r') as f:
+        all_subs = json.load(f)
+    my_subs = {sid: s for sid, s in all_subs.items() if s['patient_id'] == session['user_id']}
+    return render_template('patient_dashboard.html', name=session['name'], tasks=my_tasks, submissions=my_subs)
+
+# Additional routes for health-task creation, submission, review, messaging, etc.
 
 @app.route('/create_task', methods=['POST'])
 def create_task():
@@ -71,7 +85,45 @@ def create_task():
     new_task.save()
     return redirect(url_for('dashboard'))
 
+@app.route('/submit_task', methods=['POST'])
+def submit_task():
+    if 'user_id' not in session or session['role'] != 'patient':
+        return redirect(url_for('index'))
 
-# Additional routes for health-task creation, submission, review, messaging, etc.
+    task_id = request.form['task_id']
+    uploaded_file = request.files['submission_file']
+    patient_id = session['user_id']
+
+    temp_path = uploaded_file.filename
+    uploaded_file.save(temp_path)
+
+    submission = TaskSubmission(patient_id, task_id, temp_path)
+    try:
+        submission.save_file()
+        submission.save()
+    except ValueError:
+        os.remove(temp_path)
+        return redirect(url_for('dashboard'))
+
+    os.remove(temp_path)
+    return redirect(url_for('dashboard'))
+
+@app.route('/review_submission', methods=['POST'])
+def review_submission():
+    if 'user_id' not in session or session['role'] != 'clinician':
+        return redirect(url_for('index'))
+    sub_id = request.form['sub_id']
+    review_status = request.form['review_status']
+    notes = request.form['notes']
+    with open('data/task_submissions.json', 'r+') as f:
+        submissions = json.load(f)
+        if sub_id in submissions:
+            submissions[sub_id]['review_status'] = review_status
+            submissions[sub_id]['notes'] = notes
+        f.seek(0)
+        f.truncate()
+        json.dump(submissions, f, indent=4)
+    return redirect(url_for('dashboard'))
+
 if __name__ == '__main__':
     app.run(debug=True)

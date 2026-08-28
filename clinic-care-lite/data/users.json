@@ -9,7 +9,14 @@
     "30012026": {
         "name": "Tain Plan",
         "email": "tain.plan@test.demo",
-        "password": "$2b$12$aGA6KnsCNeIx8hSf0IUcS.MrfghA3MTW2fVDbMHWADmtYAVQJ/A9O",
+        "password": "$2b$12$MC8FQKu33E0OKB4GPZbL8O2GALnJcCyJkQ71Bv.ULWSxcM87T9CKO",
+        "role": "patient",
+        "theme": "colorful"
+    },
+    "30022026": {
+        "name": "Mia Bina",
+        "email": "mia.bina@test.demo",
+        "password": "$2b$12$JAD05EQnUS7tmNo5RvdScuRx90EVag8R3t9THM1LxCDFUYLj/TGRS",
         "role": "patient",
         "theme": "colorful"
     }
