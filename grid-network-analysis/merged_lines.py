@@ -1,3 +1,10 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+utilities = pd.read_csv('data_sets/utilities.csv')
+substations = pd.read_csv('data_sets/substations.csv')
+lines = pd.read_csv('data_sets/lines.csv')
+
 # Merge lines with substations to get source substation details
 lines_with_source = lines.merge(
     substations[['Substation ID', 'Name', 'Region', 'Country']],
@@ -17,7 +24,9 @@ lines_with_utility = lines_with_subs.merge(
 # Preview merged data
 print("Merged Lines DataFrame:")
 print(lines_with_utility[['Code', 'Source Substation', 'Region_source',
-                           'Destination Substation', 'Region_dest']].head(), "\n")
+                           'Destination Substation', 'Region_dest', 'Voltage (kV)']].head(), "\n")
+
+lines_with_utility.to_csv('merged_lines.csv')
  
 # Analyse lines by utility and source region
 lines_by_utility_region = (lines_with_utility

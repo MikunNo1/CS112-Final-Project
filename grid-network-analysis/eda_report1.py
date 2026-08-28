@@ -1,4 +1,9 @@
 import matplotlib.pyplot as plt
+import pandas as pd
+
+utilities = pd.read_csv('data_sets/utilities.csv')
+substations = pd.read_csv('data_sets/substations.csv')
+lines = pd.read_csv('data_sets/lines.csv')
  
 # Substations: distribution by region
 plt.figure(figsize=(10, 6))
